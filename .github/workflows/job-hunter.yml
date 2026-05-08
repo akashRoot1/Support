@@ -1,0 +1,46 @@
+name: Daily IT Support Job Hunter
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 4:00/5:00 UTC covers Ireland's DST shift; script ensures 5:00 local time.
+    - cron: "0 4,5 * * *"
+
+jobs:
+  run-job-hunter:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set cache date
+        id: cache-date
+        run: echo "date_key=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache job history
+        uses: actions/cache@v4
+        with:
+          path: data
+          key: job-hunter-data-${{ steps.cache-date.outputs.date_key }}
+          restore-keys: |
+            job-hunter-data-
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run job hunter
+        env:
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: python -m job_hunter
