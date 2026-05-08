@@ -87,6 +87,23 @@ def _should_run_now(now: datetime, run_config: Dict, storage: Storage) -> bool:
 
 def _collect_jobs(config: Dict, logger: logging.Logger) -> List[Job]:
     search = config.get("search", {})
+    run_config = config.get("run", {})
+    raw_failure_limit = run_config.get("source_failure_limit")
+    try:
+        failure_limit = int(raw_failure_limit)
+    except (TypeError, ValueError):
+        if raw_failure_limit is not None:
+            logger.warning(
+                "Invalid source_failure_limit %r; defaulting to 1.",
+                raw_failure_limit,
+            )
+        failure_limit = 1
+    if failure_limit < 1:
+        logger.warning(
+            "source_failure_limit must be >= 1; defaulting to 1 (got %s).",
+            failure_limit,
+        )
+        failure_limit = 1
     queries = search.get("queries", [])
     jobs: List[Job] = []
     for source in config.get("sources", []):
@@ -107,12 +124,20 @@ def _collect_jobs(config: Dict, logger: logging.Logger) -> List[Job]:
         else:
             continue
 
+        source_failure_count = 0
         for query in queries:
             try:
                 jobs.extend(collector.fetch_jobs(query))
             except (requests.RequestException, ValueError, ET.ParseError) as exc:
+                source_failure_count += 1
                 logger.warning("Source failed: %s (%s) -> %s", collector.name, query, exc)
-                continue
+                if source_failure_count >= failure_limit:
+                    logger.warning(
+                        "Skipping remaining queries for %s after %s failures.",
+                        collector.name,
+                        source_failure_count,
+                    )
+                    break
     return jobs
 
 

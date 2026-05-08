@@ -85,6 +85,7 @@ run:
   timezone: Europe/Dublin
   target_hour: 5
   window_minutes: 20
+  source_failure_limit: 1
   send_when_empty: true
   dry_run: false
 email:
