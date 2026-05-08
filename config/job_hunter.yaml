@@ -1,0 +1,219 @@
+candidate:
+  name: Akash Vikram
+  location: Ireland
+  visa_status: "Stamp 1G (Work Authorized)"
+  experience_years: 4
+  skills:
+    - Manual Testing
+    - Automation Testing
+    - API Testing
+    - Selenium
+    - Playwright
+    - Postman
+    - SQL
+    - CI/CD
+    - Linux
+    - Windows
+    - Active Directory
+    - Office 365
+    - Azure AD
+    - Networking Basics
+    - Troubleshooting
+  open_roles:
+    - IT Support
+    - Desktop Support
+    - Helpdesk Analyst
+    - Technical Support Engineer
+    - Application Support
+    - Junior System Administrator
+    - Service Desk Analyst
+    - Technical Support Specialist
+    - Entry-Level IT Roles
+    - Graduate IT Support
+    - QA Support
+  preferred_locations:
+    - Dublin
+    - Letterkenny
+    - Cork
+    - Galway
+    - Limerick
+    - Remote
+    - Hybrid
+  excluded_keywords:
+    - Senior
+    - Lead
+    - Architect
+    - DevOps
+    - SRE
+    - Security Clearance
+    - Principal
+    - Manager
+  entry_level_keywords:
+    - Junior
+    - Graduate
+    - Entry Level
+    - 0-2 years
+    - 1-3 years
+    - Early Career
+  visa_friendly_keywords:
+    - sponsorship
+    - visa
+    - work permit
+    - relocate
+  easy_apply_keywords:
+    - easy apply
+    - 1-click apply
+    - quick apply
+  remote_keywords:
+    - remote
+    - hybrid
+search:
+  queries:
+    - IT Support
+    - Desktop Support
+    - Service Desk
+    - Helpdesk
+    - Technical Support
+    - Application Support
+    - QA Support
+  max_age_days: 3
+  last_24h_hours: 24
+  min_match_score: 50
+  max_jobs_per_section: 10
+run:
+  timezone: Europe/Dublin
+  send_when_empty: true
+  dry_run: false
+email:
+  to: akashvikram98@gmail.com
+  from: ""
+  subject_prefix: "Daily IT Support Jobs - Ireland"
+  smtp:
+    host: ""
+    port: 587
+    user: ""
+    password: ""
+    use_tls: true
+    retries: 3
+sources:
+  - name: Indeed Ireland (RSS)
+    type: rss
+    enabled: true
+    url_template: "https://ie.indeed.com/rss?q={query}&l=Ireland"
+  - name: IrishJobs.ie (HTML)
+    type: html
+    enabled: true
+    url_template: "https://www.irishjobs.ie/ShowResults.aspx?Keywords={query}&Location=Ireland"
+    selectors:
+      job_card: ".job-result"
+      title: ".job-title"
+      company: ".job-company"
+      location: ".job-location"
+      link: "a"
+      date: ".job-date"
+      snippet: ".job-description"
+  - name: Jobs.ie (HTML)
+    type: html
+    enabled: true
+    url_template: "https://www.jobs.ie/jobs?q={query}&l=Ireland"
+    selectors:
+      job_card: ".job-result"
+      title: ".job-title"
+      company: ".job-company"
+      location: ".job-location"
+      link: "a"
+      date: ".job-date"
+      snippet: ".job-description"
+  - name: LinkedIn Jobs (HTML)
+    type: html
+    enabled: true
+    url_template: "https://www.linkedin.com/jobs/search/?keywords={query}&location=Ireland"
+    selectors:
+      job_card: ".jobs-search__results-list li"
+      title: ".base-search-card__title"
+      company: ".base-search-card__subtitle"
+      location: ".job-search-card__location"
+      link: "a.base-card__full-link"
+      date: "time"
+      snippet: ".job-search-card__snippet"
+  - name: Glassdoor (HTML)
+    type: html
+    enabled: true
+    url_template: "https://www.glassdoor.ie/Job/jobs.htm?sc.keyword={query}"
+    selectors:
+      job_card: "li.react-job-listing"
+      title: ".job-title"
+      company: ".job-link"
+      location: ".loc"
+      link: "a.jobLink"
+      date: ".d-flex align-items-center"
+      snippet: ".job-snippet"
+  - name: RecruitIreland (HTML)
+    type: html
+    enabled: true
+    url_template: "https://www.recruitireland.com/jobs?keywords={query}"
+    selectors:
+      job_card: ".job-result"
+      title: ".job-title"
+      company: ".job-company"
+      location: ".job-location"
+      link: "a"
+      date: ".job-date"
+      snippet: ".job-description"
+  - name: CPL (HTML)
+    type: html
+    enabled: true
+    url_template: "https://www.cpl.com/jobs?keywords={query}"
+    selectors:
+      job_card: ".job-result"
+      title: ".job-title"
+      company: ".job-company"
+      location: ".job-location"
+      link: "a"
+      date: ".job-date"
+      snippet: ".job-description"
+  - name: Morgan McKinley (HTML)
+    type: html
+    enabled: true
+    url_template: "https://www.morganmckinley.com/ie/jobs?keywords={query}"
+    selectors:
+      job_card: ".job-result"
+      title: ".job-title"
+      company: ".job-company"
+      location: ".job-location"
+      link: "a"
+      date: ".job-date"
+      snippet: ".job-description"
+  - name: Company Career Pages (ATS)
+    type: ats
+    enabled: true
+    ats_boards:
+      - provider: greenhouse
+        company: ""
+      - provider: lever
+        company: ""
+      - provider: workable
+        company: ""
+data_sources:
+  recruiters:
+    - name: CPL
+      website: "https://www.cpl.com"
+      email: ""
+    - name: Morgan McKinley
+      website: "https://www.morganmckinley.com/ie"
+      email: ""
+    - name: RecruitIreland
+      website: "https://www.recruitireland.com"
+      email: ""
+  networking_events:
+    - name: "Tech Ireland Events"
+      website: "https://www.techireland.org"
+      date: ""
+  keywords_to_track:
+    - Active Directory
+    - Office 365
+    - Windows
+    - Linux
+    - Azure
+    - ITIL
+    - CompTIA
