@@ -33,7 +33,8 @@ def build_report(
     ][:max_per_section]
 
     body = []
-    body.append(_section("Top 10 Best Matches", top_matches, now))
+    top_title = f"Top {max_per_section} Best Matches"
+    body.append(_section(top_title, top_matches, now))
     body.append(_section("Remote Jobs", remote_jobs, now))
     body.append(_section("Easy Apply Jobs", easy_apply, now))
     body.append(_section("Visa-Friendly Companies", visa_friendly, now))

@@ -24,7 +24,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data
-          key: job-hunter-data-${{ github.run_id }}
+          key: job-hunter-data-${{ github.run_number }}
           restore-keys: |
             job-hunter-data-
 

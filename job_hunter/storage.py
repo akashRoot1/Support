@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Optional
 
@@ -87,7 +87,7 @@ class Storage:
                     job.location,
                     job.link,
                     job.source,
-                    job.posted_date.isoformat() if job.posted_date else None,
+                    _to_utc_string(job.posted_date),
                     job.salary,
                     int(job.easy_apply),
                     int(job.sponsorship),
@@ -138,3 +138,12 @@ class Storage:
 
     def job_id(self, job: Job) -> str:
         return normalize_key([job.title, job.company, job.location, job.link])
+
+
+def _to_utc_string(value: Optional[datetime]) -> Optional[str]:
+    if not value:
+        return None
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=timezone.utc)
+    value = value.astimezone(timezone.utc)
+    return value.strftime("%Y-%m-%d %H:%M:%S")
