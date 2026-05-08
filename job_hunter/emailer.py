@@ -3,14 +3,14 @@ from __future__ import annotations
 import smtplib
 import time
 from email.message import EmailMessage
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 MAX_BACKOFF_SECONDS = 60
 BACKOFF_SECONDS = 10
 
 
-def _is_empty_or_whitespace(value: object) -> bool:
-    return not str(value or "").strip()
+def _is_empty_or_whitespace(value: Optional[str]) -> bool:
+    return value is None or not value.strip()
 
 
 def _validate_email_config(email_config: Dict[str, Any]) -> None:
@@ -29,7 +29,7 @@ def _validate_email_config(email_config: Dict[str, Any]) -> None:
     if missing:
         raise ValueError(
             f"Missing required email/SMTP settings: {', '.join(missing)}. "
-            "Update config/job_hunter.yaml or repository secrets."
+            "Update config/job_hunter.yaml (repo root) or repository secrets."
         )
 
 
