@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import Dict, List, TYPE_CHECKING
 
-import requests
+if TYPE_CHECKING:
+    import requests
 
 from ..models import Job
 from ..http_client import build_session, get_timeout
