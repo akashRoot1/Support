@@ -88,7 +88,7 @@ run:
   send_when_empty: true
   dry_run: false
 email:
-  to: akashvikram98@gmail.com
+  to: ""
   from: ""
   subject_prefix: "Daily IT Support Jobs - Ireland"
   smtp:

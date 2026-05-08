@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
@@ -27,13 +28,14 @@ def main() -> None:
 
     timezone = ZoneInfo(run_config.get("timezone", "Europe/Dublin"))
     now = datetime.now(tz=timezone)
+    logger = _setup_logging(DATA_PATH / "job_hunter.log")
 
     storage = Storage(DATA_PATH / "jobs.db")
     if not args.force and not _should_run_now(now, run_config, storage):
         storage.close()
         return
 
-    jobs = _collect_jobs(config)
+    jobs = _collect_jobs(config, logger)
     matches = _filter_and_score(jobs, config, now, storage)
     matches.sort(key=lambda match: (match.score, match.job.posted_date or now), reverse=True)
 
@@ -80,7 +82,7 @@ def _should_run_now(now: datetime, run_config: Dict, storage: Storage) -> bool:
     return True
 
 
-def _collect_jobs(config: Dict) -> List[Job]:
+def _collect_jobs(config: Dict, logger: logging.Logger) -> List[Job]:
     search = config.get("search", {})
     queries = search.get("queries", [])
     jobs: List[Job] = []
@@ -106,7 +108,7 @@ def _collect_jobs(config: Dict) -> List[Job]:
             try:
                 jobs.extend(collector.fetch_jobs(query))
             except Exception as exc:  # pylint: disable=broad-except
-                print(f"Source failed: {collector.name} ({query}) -> {exc}")
+                logger.warning("Source failed: %s (%s) -> %s", collector.name, query, exc)
                 continue
     return jobs
 
@@ -201,3 +203,18 @@ def _build_extra_sections(matches: List[JobMatch], config: Dict) -> Dict[str, Li
         ]
 
     return extra_sections
+
+
+def _setup_logging(log_path: Path) -> logging.Logger:
+    logger = logging.getLogger("job_hunter")
+    logger.setLevel(logging.INFO)
+    if logger.handlers:
+        return logger
+    formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
+    file_handler = logging.FileHandler(log_path)
+    file_handler.setFormatter(formatter)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
+    return logger

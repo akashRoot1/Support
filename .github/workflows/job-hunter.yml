@@ -20,11 +20,15 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Set cache date
+        id: cache-date
+        run: echo "date_key=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
       - name: Cache job history
         uses: actions/cache@v4
         with:
           path: data
-          key: job-hunter-data-${{ github.run_number }}
+          key: job-hunter-data-${{ steps.cache-date.outputs.date_key }}
           restore-keys: |
             job-hunter-data-
 

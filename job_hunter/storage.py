@@ -119,16 +119,15 @@ class Storage:
 
     def list_recent_companies(self, days: int) -> list[tuple[str, int]]:
         cursor = self.conn.execute(
-            """
+            f"""
             SELECT company, COUNT(*) as total
             FROM jobs
             WHERE posted_date IS NOT NULL
-              AND posted_date >= datetime('now', ?)
+              AND datetime(posted_date) >= datetime('now', '-{days} days')
             GROUP BY company
             ORDER BY total DESC
             LIMIT 10
-            """,
-            (f"-{days} days",),
+            """
         )
         return [(row["company"], row["total"]) for row in cursor.fetchall()]
 
@@ -146,4 +145,4 @@ def _to_utc_string(value: Optional[datetime]) -> Optional[str]:
     if value.tzinfo is None:
         value = value.replace(tzinfo=timezone.utc)
     value = value.astimezone(timezone.utc)
-    return value.strftime("%Y-%m-%d %H:%M:%S")
+    return value.isoformat(timespec="seconds").replace("+00:00", "Z")
