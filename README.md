@@ -49,6 +49,17 @@ GitHub Actions runs the job hunter daily. The workflow:
 
 Add the SMTP secrets in your repository settings so the workflow can send email.
 
+## Verify email delivery
+
+1. Confirm repo secrets are correct:
+   - EMAIL_FROM and SMTP_USER should be the same account.
+   - SMTP_HOST should match your provider.
+   - SMTP_PASS should be an app password if using Gmail.
+2. Remember the script exits unless it is within the 5:00 AM Europe/Dublin window.
+3. For immediate verification, run the workflow manually and check the **force** input (optionally enable **dry_run** to avoid sending email) in the **Run workflow** dialog.
+4. Open the workflow job logs to confirm it did not exit early and that it attempted to send the report.
+5. If no email arrives, check your sent/spam folders and verify SMTP credentials.
+
 ## Data storage
 
 Job history is stored in `data/jobs.db` (SQLite). This file is cached during scheduled runs and ignored by Git.

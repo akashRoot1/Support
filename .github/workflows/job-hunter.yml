@@ -2,6 +2,15 @@ name: Daily IT Support Job Hunter
 
 on:
   workflow_dispatch:
+    inputs:
+      force:
+        description: "Bypass the scheduled 5:00 Ireland-time window"
+        type: boolean
+        default: false
+      dry_run:
+        description: "Print the report to logs instead of sending email"
+        type: boolean
+        default: false
   schedule:
     # 4:00/5:00 UTC covers Ireland's DST shift; script ensures 5:00 local time.
     - cron: "0 4,5 * * *"
@@ -43,4 +52,12 @@ jobs:
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
-        run: python -m job_hunter
+        run: |
+          args=()
+          if [[ "${{ inputs.force || 'false' }}" == "true" ]]; then
+            args+=(--force)
+          fi
+          if [[ "${{ inputs.dry_run || 'false' }}" == "true" ]]; then
+            args+=(--dry-run)
+          fi
+          python -m job_hunter "${args[@]}"
