@@ -1,4 +1,6 @@
-from typing import Any, Dict, List, Tuple
+from typing import Dict, List, Tuple, cast
+
+import requests
 from ..models import Job
 from ..http_client import build_session, get_timeout
 from ..utils import normalize_space, parse_date
@@ -14,22 +16,23 @@ class AtsSource:
 
     def fetch_jobs(self, query: str) -> List[Job]:
         jobs: List[Job] = []
+        session = cast(requests.Session, self.session)
         for board in self.boards:
             provider = (board.get("provider") or "").lower()
             company = board.get("company")
             if not company:
                 continue
             if provider == "greenhouse":
-                jobs.extend(_fetch_greenhouse(company, self.name, self.session, self.timeout))
+                jobs.extend(_fetch_greenhouse(company, self.name, session, self.timeout))
             elif provider == "lever":
-                jobs.extend(_fetch_lever(company, self.name, self.session, self.timeout))
+                jobs.extend(_fetch_lever(company, self.name, session, self.timeout))
             elif provider == "workable":
-                jobs.extend(_fetch_workable(company, self.name, self.session, self.timeout))
+                jobs.extend(_fetch_workable(company, self.name, session, self.timeout))
         return jobs
 
 
 def _fetch_greenhouse(
-    company: str, source_name: str, session: Any, timeout: Tuple[float, float]
+    company: str, source_name: str, session: requests.Session, timeout: Tuple[float, float]
 ) -> List[Job]:
     url = f"https://boards-api.greenhouse.io/v1/boards/{company}/jobs?content=true"
     response = session.get(url, timeout=timeout)
@@ -52,7 +55,7 @@ def _fetch_greenhouse(
 
 
 def _fetch_lever(
-    company: str, source_name: str, session: Any, timeout: Tuple[float, float]
+    company: str, source_name: str, session: requests.Session, timeout: Tuple[float, float]
 ) -> List[Job]:
     url = f"https://api.lever.co/v0/postings/{company}?mode=json"
     response = session.get(url, timeout=timeout)
@@ -75,7 +78,7 @@ def _fetch_lever(
 
 
 def _fetch_workable(
-    company: str, source_name: str, session: Any, timeout: Tuple[float, float]
+    company: str, source_name: str, session: requests.Session, timeout: Tuple[float, float]
 ) -> List[Job]:
     url = f"https://{company}.workable.com/api/v1/jobs?state=published"
     response = session.get(url, timeout=timeout)

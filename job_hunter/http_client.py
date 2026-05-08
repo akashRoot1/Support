@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Iterable, List, Tuple
 
 import requests
@@ -10,7 +10,7 @@ from urllib3.util.retry import Retry
 def _estimate_chrome_major() -> int:
     base_year = 2024
     base_version = 120
-    year = datetime.utcnow().year
+    year = datetime.now(timezone.utc).year
     return base_version + max(0, year - base_year) * 12
 
 
