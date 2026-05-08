@@ -17,7 +17,7 @@ def load_config(path: str) -> Dict[str, Any]:
     email["from"] = os.getenv("EMAIL_FROM", email.get("from", ""))
     smtp["host"] = os.getenv("SMTP_HOST", smtp.get("host", ""))
     smtp_port = os.getenv("SMTP_PORT")
-    if smtp_port is None or not smtp_port.strip():
+    if not smtp_port or not smtp_port.strip():
         smtp["port"] = int(smtp.get("port", 587))
     else:
         smtp["port"] = int(smtp_port)
