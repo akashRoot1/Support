@@ -9,12 +9,38 @@ MAX_BACKOFF_SECONDS = 60
 BACKOFF_SECONDS = 10
 
 
+def _is_blank(value: object) -> bool:
+    return not str(value or "").strip()
+
+
+def _validate_email_config(email_config: Dict) -> None:
+    smtp = email_config.get("smtp", {})
+    missing = []
+    if _is_blank(email_config.get("from")):
+        missing.append("EMAIL_FROM/email.from")
+    if _is_blank(email_config.get("to")):
+        missing.append("EMAIL_TO/email.to")
+    if _is_blank(smtp.get("host")):
+        missing.append("SMTP_HOST/email.smtp.host")
+    if _is_blank(smtp.get("user")):
+        missing.append("SMTP_USER/email.smtp.user")
+    if _is_blank(smtp.get("password")):
+        missing.append("SMTP_PASS/email.smtp.password")
+    if missing:
+        raise ValueError(
+            "Missing required email/SMTP settings: "
+            + ", ".join(missing)
+            + ". Update config/job_hunter.yaml or repository secrets."
+        )
+
+
 def send_email(
     subject: str,
     body: str,
     email_config: Dict,
     retries: int = 3,
 ) -> None:
+    _validate_email_config(email_config)
     smtp = email_config.get("smtp", {})
     message = EmailMessage()
     message["Subject"] = subject
