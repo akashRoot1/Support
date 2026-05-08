@@ -16,7 +16,11 @@ def load_config(path: str) -> Dict[str, Any]:
     email["to"] = os.getenv("EMAIL_TO", email.get("to", ""))
     email["from"] = os.getenv("EMAIL_FROM", email.get("from", ""))
     smtp["host"] = os.getenv("SMTP_HOST", smtp.get("host", ""))
-    smtp["port"] = int(os.getenv("SMTP_PORT", smtp.get("port", 587)))
+    smtp_port = os.getenv("SMTP_PORT")
+    if smtp_port is None or not smtp_port.strip():
+        smtp["port"] = int(smtp.get("port", 587))
+    else:
+        smtp["port"] = int(smtp_port)
     smtp["user"] = os.getenv("SMTP_USER", smtp.get("user", ""))
     smtp["password"] = os.getenv("SMTP_PASS", smtp.get("password", ""))
 
