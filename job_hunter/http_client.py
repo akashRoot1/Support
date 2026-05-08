@@ -34,7 +34,7 @@ def build_session(config: Dict) -> requests.Session:
 
     retry_config = _get_http_config(config).get("retries", {}) or {}
     total = _coerce_int(retry_config.get("total"), DEFAULT_RETRY_TOTAL)
-    if total < 1:
+    if total < 0:
         total = DEFAULT_RETRY_TOTAL
     backoff_factor = _coerce_float(retry_config.get("backoff_factor"), DEFAULT_BACKOFF_FACTOR)
     status_forcelist = _coerce_int_list(
