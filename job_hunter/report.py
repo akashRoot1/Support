@@ -73,13 +73,11 @@ def _build_links_only_report(matches: Iterable[JobMatch]) -> str:
     matches = list(matches)
     total = len(matches)
     header = "✨ IT Support Roles — Quick Picks"
-    lines = [
-        header,
-        f"Found {total} new role{'s' if total != 1 else ''} today.",
-    ]
+    lines = [header]
     if not matches:
         lines.append("No matching roles found today. I'll keep looking and send the next update soon.")
         return "\n".join(lines)
+    lines.append(f"Found {total} new role{'s' if total != 1 else ''} today.")
     lines.extend(["", "Here are the latest roles:", ""])
     for index, match in enumerate(matches, 1):
         job = match.job
@@ -91,11 +89,10 @@ def _build_links_only_report(matches: Iterable[JobMatch]) -> str:
                 f"   Company: {company}",
                 f"   Location: {location}",
                 f"   Apply: {job.link}",
-                "",
             ]
         )
-    if lines[-1] == "":
-        lines.pop()
+        if index != total:
+            lines.append("")
     lines.extend(["", "Good luck — you've got this! 🚀"])
     return "\n".join(lines)
 
