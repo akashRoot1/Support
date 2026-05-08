@@ -1,6 +1,4 @@
-from typing import Dict, List
-
-import requests
+from typing import Any, Dict, List, Tuple
 from ..models import Job
 from ..http_client import build_session, get_timeout
 from ..utils import normalize_space, parse_date
@@ -31,7 +29,7 @@ class AtsSource:
 
 
 def _fetch_greenhouse(
-    company: str, source_name: str, session: requests.Session, timeout: tuple[float, float]
+    company: str, source_name: str, session: Any, timeout: Tuple[float, float]
 ) -> List[Job]:
     url = f"https://boards-api.greenhouse.io/v1/boards/{company}/jobs?content=true"
     response = session.get(url, timeout=timeout)
@@ -54,7 +52,7 @@ def _fetch_greenhouse(
 
 
 def _fetch_lever(
-    company: str, source_name: str, session: requests.Session, timeout: tuple[float, float]
+    company: str, source_name: str, session: Any, timeout: Tuple[float, float]
 ) -> List[Job]:
     url = f"https://api.lever.co/v0/postings/{company}?mode=json"
     response = session.get(url, timeout=timeout)
@@ -77,7 +75,7 @@ def _fetch_lever(
 
 
 def _fetch_workable(
-    company: str, source_name: str, session: requests.Session, timeout: tuple[float, float]
+    company: str, source_name: str, session: Any, timeout: Tuple[float, float]
 ) -> List[Job]:
     url = f"https://{company}.workable.com/api/v1/jobs?state=published"
     response = session.get(url, timeout=timeout)
