@@ -87,6 +87,8 @@ def _should_run_now(now: datetime, run_config: Dict, storage: Storage) -> bool:
 
 def _collect_jobs(config: Dict, logger: logging.Logger) -> List[Job]:
     search = config.get("search", {})
+    run_config = config.get("run", {})
+    max_failures = max(int(run_config.get("source_failure_limit", 2)), 1)
     queries = search.get("queries", [])
     jobs: List[Job] = []
     for source in config.get("sources", []):
@@ -107,11 +109,20 @@ def _collect_jobs(config: Dict, logger: logging.Logger) -> List[Job]:
         else:
             continue
 
+        failures = 0
         for query in queries:
             try:
                 jobs.extend(collector.fetch_jobs(query))
             except (requests.RequestException, ValueError, ET.ParseError) as exc:
+                failures += 1
                 logger.warning("Source failed: %s (%s) -> %s", collector.name, query, exc)
+                if failures >= max_failures:
+                    logger.warning(
+                        "Skipping remaining queries for %s after %s failures.",
+                        collector.name,
+                        failures,
+                    )
+                    break
                 continue
     return jobs
 
