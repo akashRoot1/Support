@@ -54,10 +54,10 @@ jobs:
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
         run: |
           args=()
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.force }}" == "true" ]]; then
+          if [[ "${{ inputs.force || 'false' }}" == "true" ]]; then
             args+=(--force)
           fi
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.dry_run }}" == "true" ]]; then
+          if [[ "${{ inputs.dry_run || 'false' }}" == "true" ]]; then
             args+=(--dry-run)
           fi
           python -m job_hunter "${args[@]}"
