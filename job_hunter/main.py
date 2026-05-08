@@ -87,9 +87,10 @@ def _should_run_now(now: datetime, run_config: Dict, storage: Storage) -> bool:
 
 def _collect_jobs(config: Dict, logger: logging.Logger) -> List[Job]:
     search = config.get("search", {})
-    run_config = config.get("run", {})
+    run_settings = config.get("run", {})
+    raw_failure_limit = run_settings.get("source_failure_limit")
     try:
-        failure_limit = int(run_config.get("source_failure_limit", 1))
+        failure_limit = int(raw_failure_limit) if raw_failure_limit is not None else 1
     except (TypeError, ValueError):
         failure_limit = 1
     failure_limit = max(failure_limit, 1)
