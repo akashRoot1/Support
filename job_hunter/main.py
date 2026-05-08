@@ -93,7 +93,8 @@ def _collect_jobs(config: Dict, logger: logging.Logger) -> List[Job]:
         failure_limit = int(raw_failure_limit)
     except (TypeError, ValueError):
         failure_limit = 1
-    failure_limit = max(failure_limit, 1)
+    if failure_limit < 1:
+        failure_limit = 1
     queries = search.get("queries", [])
     jobs: List[Job] = []
     for source in config.get("sources", []):
