@@ -90,7 +90,7 @@ def _collect_jobs(config: Dict, logger: logging.Logger) -> List[Job]:
     run_settings = config.get("run", {})
     raw_failure_limit = run_settings.get("source_failure_limit")
     try:
-        failure_limit = int(raw_failure_limit) if raw_failure_limit is not None else 1
+        failure_limit = int(raw_failure_limit)
     except (TypeError, ValueError):
         failure_limit = 1
     failure_limit = max(failure_limit, 1)
@@ -114,18 +114,18 @@ def _collect_jobs(config: Dict, logger: logging.Logger) -> List[Job]:
         else:
             continue
 
-        failure_count = 0
+        source_failure_count = 0
         for query in queries:
             try:
                 jobs.extend(collector.fetch_jobs(query))
             except (requests.RequestException, ValueError, ET.ParseError) as exc:
-                failure_count += 1
+                source_failure_count += 1
                 logger.warning("Source failed: %s (%s) -> %s", collector.name, query, exc)
-                if failure_count >= failure_limit:
+                if source_failure_count >= failure_limit:
                     logger.warning(
                         "Skipping remaining queries for %s after %s failures.",
                         collector.name,
-                        failure_count,
+                        source_failure_count,
                     )
                     break
     return jobs
