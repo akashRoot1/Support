@@ -16,9 +16,13 @@ def build_report(
 ) -> Tuple[str, str]:
     email = config.get("email", {})
     search = config.get("search", {})
+    report = config.get("report", {})
 
     subject_prefix = email.get("subject_prefix", "").strip()
     subject = f"{subject_prefix} - {now:%Y-%m-%d}"
+    if report.get("mode") == "links_only":
+        return subject, _build_links_only_report(matches)
+
     max_per_section = int(search.get("max_jobs_per_section", 10))
 
     top_matches = matches[:max_per_section]
@@ -63,6 +67,17 @@ def build_report(
         body.append("\nNetworking Opportunities:\n" + "\n".join(extra_sections["events"]))
 
     return subject, "\n".join(section for section in body if section)
+
+
+def _build_links_only_report(matches: Iterable[JobMatch]) -> str:
+    lines = ["IT Support Roles:"]
+    if not matches:
+        lines.append("- No matching roles found.")
+        return "\n".join(lines)
+    for match in matches:
+        job = match.job
+        lines.append(f"- {job.title} | {job.company} | {job.location} | {job.link}")
+    return "\n".join(lines)
 
 
 def _section(title: str, matches: Iterable[JobMatch], now: datetime) -> str:

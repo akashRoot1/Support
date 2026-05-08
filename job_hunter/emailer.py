@@ -63,6 +63,11 @@ def send_email(
                     server.login(user, password)
                 server.send_message(message)
             return
+        except smtplib.SMTPAuthenticationError as exc:
+            raise ValueError(
+                "SMTP authentication failed. Verify SMTP_USER/SMTP_PASS (Gmail requires an app password) "
+                "and update repository secrets or config/job_hunter.yaml."
+            ) from exc
         except (smtplib.SMTPException, OSError) as exc:
             last_error = exc
             time.sleep(min(MAX_BACKOFF_SECONDS, attempt * BACKOFF_SECONDS))

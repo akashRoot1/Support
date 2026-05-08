@@ -3,22 +3,7 @@ candidate:
   location: Ireland
   visa_status: "Stamp 1G (Work Authorized)"
   experience_years: 4
-  skills:
-    - Manual Testing
-    - Automation Testing
-    - API Testing
-    - Selenium
-    - Playwright
-    - Postman
-    - SQL
-    - CI/CD
-    - Linux
-    - Windows
-    - Active Directory
-    - Office 365
-    - Azure AD
-    - Networking Basics
-    - Troubleshooting
+  skills: []
   open_roles:
     - IT Support
     - Desktop Support
@@ -79,8 +64,10 @@ search:
   max_age_days: 3
   future_hours_tolerance: 2
   recent_posting_threshold_hours: 24
-  min_match_score: 50
+  min_match_score: 0
   max_jobs_per_section: 10
+report:
+  mode: links_only
 run:
   timezone: Europe/Dublin
   target_hour: 5
@@ -217,11 +204,4 @@ data_sources:
     - name: "Tech Ireland Events"
       website: "https://www.techireland.org"
       date: ""
-  keywords_to_track:
-    - Active Directory
-    - Office 365
-    - Windows
-    - Linux
-    - Azure
-    - ITIL
-    - CompTIA
+  keywords_to_track: []

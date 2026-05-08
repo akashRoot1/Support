@@ -27,6 +27,7 @@ Update `config/job_hunter.yaml` for:
 - Search queries, roles, and preferred locations
 - Source lists and ATS boards
 - Email delivery settings
+- Report mode (set `report.mode: links_only` to email just the job links)
 
 Environment variables override email settings:
 
