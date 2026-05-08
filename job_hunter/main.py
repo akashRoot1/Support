@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import argparse
 import logging
+import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
 from zoneinfo import ZoneInfo
+
+import requests
 
 from .config import load_config
 from .emailer import send_email
@@ -107,7 +110,7 @@ def _collect_jobs(config: Dict, logger: logging.Logger) -> List[Job]:
         for query in queries:
             try:
                 jobs.extend(collector.fetch_jobs(query))
-            except Exception as exc:  # pylint: disable=broad-except
+            except (requests.RequestException, ValueError, ET.ParseError) as exc:
                 logger.warning("Source failed: %s (%s) -> %s", collector.name, query, exc)
                 continue
     return jobs

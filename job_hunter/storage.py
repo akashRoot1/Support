@@ -119,15 +119,16 @@ class Storage:
 
     def list_recent_companies(self, days: int) -> list[tuple[str, int]]:
         cursor = self.conn.execute(
-            f"""
+            """
             SELECT company, COUNT(*) as total
             FROM jobs
             WHERE posted_date IS NOT NULL
-              AND datetime(posted_date) >= datetime('now', '-{days} days')
+              AND datetime(posted_date) >= datetime('now', ?)
             GROUP BY company
             ORDER BY total DESC
             LIMIT 10
-            """
+            """,
+            (f"-{days} days",),
         )
         return [(row["company"], row["total"]) for row in cursor.fetchall()]
 

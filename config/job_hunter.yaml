@@ -78,7 +78,7 @@ search:
     - QA Support
   max_age_days: 3
   future_hours_tolerance: 2
-  last_24h_hours: 24
+  recent_posting_threshold_hours: 24
   min_match_score: 50
   max_jobs_per_section: 10
 run:
@@ -191,6 +191,7 @@ sources:
     type: ats
     enabled: true
     ats_boards:
+      # Add company slugs to enable ATS sources; empty entries are skipped.
       - provider: greenhouse
         # Replace with Greenhouse board slug, e.g. "stripe"
         company: ""

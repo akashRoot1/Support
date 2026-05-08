@@ -25,11 +25,14 @@ def build_report(
     remote_jobs = [match for match in matches if _is_remote(match)][:max_per_section]
     easy_apply = [match for match in matches if match.job.easy_apply][:max_per_section]
     visa_friendly = [match for match in matches if match.job.sponsorship][:max_per_section]
+    recent_threshold = search.get(
+        "recent_posting_threshold_hours", search.get("last_24h_hours", 24)
+    )
     last_24h = [
         match
         for match in matches
         if hours_ago(match.job.posted_date, now) is not None
-        and hours_ago(match.job.posted_date, now) <= search.get("last_24h_hours", 24)
+        and hours_ago(match.job.posted_date, now) <= recent_threshold
     ][:max_per_section]
 
     body = []

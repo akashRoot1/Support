@@ -67,4 +67,4 @@ def _select_attr(node, selector: Optional[str], attr: str) -> str:
     target = node.select_one(selector)
     if not target:
         return ""
-    return normalize_space(target.get(attr, ""))
+    return normalize_space(target.get(attr) or "")

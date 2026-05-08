@@ -55,6 +55,7 @@ def is_within_days(
         return False
     if date_value.tzinfo is None and now.tzinfo is not None:
         date_value = date_value.replace(tzinfo=now.tzinfo)
+    # Allow a small future tolerance to handle timezone drift or feed time skew.
     return now - timedelta(days=days) <= date_value <= now + timedelta(hours=future_hours)
 
 
