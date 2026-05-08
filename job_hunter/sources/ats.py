@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple, cast
+from typing import Dict, List, Tuple
 
 import requests
 from ..models import Job
@@ -16,18 +16,17 @@ class AtsSource:
 
     def fetch_jobs(self, query: str) -> List[Job]:
         jobs: List[Job] = []
-        session = cast(requests.Session, self.session)
         for board in self.boards:
             provider = (board.get("provider") or "").lower()
             company = board.get("company")
             if not company:
                 continue
             if provider == "greenhouse":
-                jobs.extend(_fetch_greenhouse(company, self.name, session, self.timeout))
+                jobs.extend(_fetch_greenhouse(company, self.name, self.session, self.timeout))
             elif provider == "lever":
-                jobs.extend(_fetch_lever(company, self.name, session, self.timeout))
+                jobs.extend(_fetch_lever(company, self.name, self.session, self.timeout))
             elif provider == "workable":
-                jobs.extend(_fetch_workable(company, self.name, session, self.timeout))
+                jobs.extend(_fetch_workable(company, self.name, self.session, self.timeout))
         return jobs
 
 

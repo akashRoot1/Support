@@ -11,7 +11,7 @@ def _estimate_chrome_major() -> int:
     base_year = 2024
     base_version = 120
     year = datetime.now(timezone.utc).year
-    return base_version + max(0, year - base_year) * 12
+    return base_version + max(0, year - base_year) * 6
 
 
 DEFAULT_CHROME_MAJOR = _estimate_chrome_major()
