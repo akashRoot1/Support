@@ -5,8 +5,7 @@ from datetime import datetime
 from typing import Dict, List
 from urllib.parse import quote_plus
 
-import requests
-
+from ..http_client import build_session, get_timeout
 from ..models import Job
 from ..utils import parse_date, normalize_space
 
@@ -16,14 +15,12 @@ class RssSource:
         self.name = name
         self.url_template = url_template
         self.config = config
+        self.session = build_session(config)
+        self.timeout = get_timeout(config)
 
     def fetch_jobs(self, query: str) -> List[Job]:
         url = self.url_template.format(query=quote_plus(query))
-        response = requests.get(
-            url,
-            timeout=30,
-            headers={"User-Agent": "Mozilla/5.0 (JobHunterBot)"},
-        )
+        response = self.session.get(url, timeout=self.timeout)
         response.raise_for_status()
         root = ET.fromstring(response.text)
         items = root.findall(".//item")
