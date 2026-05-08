@@ -1,15 +1,24 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Dict, Iterable, List, Tuple
 
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
+def _estimate_chrome_major() -> int:
+    base_year = 2024
+    base_version = 120
+    year = datetime.utcnow().year
+    return base_version + max(0, year - base_year) * 12
+
+
+DEFAULT_CHROME_MAJOR = _estimate_chrome_major()
 DEFAULT_USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
     "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome Safari/537.36"
+    f"Chrome/{DEFAULT_CHROME_MAJOR}.0.0.0 Safari/537.36"
 )
 
 DEFAULT_HEADERS = {
