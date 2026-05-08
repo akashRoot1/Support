@@ -77,11 +77,14 @@ search:
     - Application Support
     - QA Support
   max_age_days: 3
+  future_hours_tolerance: 2
   last_24h_hours: 24
   min_match_score: 50
   max_jobs_per_section: 10
 run:
   timezone: Europe/Dublin
+  target_hour: 5
+  window_minutes: 20
   send_when_empty: true
   dry_run: false
 email:
@@ -189,10 +192,13 @@ sources:
     enabled: true
     ats_boards:
       - provider: greenhouse
+        # Replace with Greenhouse board slug, e.g. "stripe"
         company: ""
       - provider: lever
+        # Replace with Lever board slug, e.g. "figma"
         company: ""
       - provider: workable
+        # Replace with Workable subdomain, e.g. "company"
         company: ""
 data_sources:
   recruiters:

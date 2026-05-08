@@ -5,6 +5,9 @@ import time
 from email.message import EmailMessage
 from typing import Dict
 
+MAX_BACKOFF_SECONDS = 60
+BACKOFF_SECONDS = 10
+
 
 def send_email(
     subject: str,
@@ -37,7 +40,7 @@ def send_email(
             return
         except (smtplib.SMTPException, OSError) as exc:
             last_error = exc
-            time.sleep(min(60, attempt * 10))
+            time.sleep(min(MAX_BACKOFF_SECONDS, attempt * BACKOFF_SECONDS))
 
     if last_error:
         raise last_error

@@ -3,11 +3,14 @@ name: Daily IT Support Job Hunter
 on:
   workflow_dispatch:
   schedule:
+    # 4:00/5:00 UTC covers Ireland's DST shift; script ensures 5:00 local time.
     - cron: "0 4,5 * * *"
 
 jobs:
   run-job-hunter:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4

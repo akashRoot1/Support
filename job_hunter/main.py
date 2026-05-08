@@ -71,8 +71,8 @@ def _parse_args() -> argparse.Namespace:
 def _should_run_now(now: datetime, run_config: Dict, storage: Storage) -> bool:
     if storage.has_run_today(now.strftime("%Y-%m-%d")):
         return False
-    target_hour = 5
-    window_minutes = 20
+    target_hour = int(run_config.get("target_hour", 5))
+    window_minutes = int(run_config.get("window_minutes", 20))
     if now.hour != target_hour:
         return False
     if now.minute > window_minutes:
@@ -121,7 +121,12 @@ def _filter_and_score(jobs: List[Job], config: Dict, now: datetime, storage: Sto
         _annotate_job(job, config)
         if not job.title or not job.link:
             continue
-        if not is_within_days(job.posted_date, max_days, now):
+        if not is_within_days(
+            job.posted_date,
+            max_days,
+            now,
+            int(search.get("future_hours_tolerance", 2)),
+        ):
             continue
         excluded, _ = should_exclude(job, config)
         if excluded:

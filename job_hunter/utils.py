@@ -48,12 +48,14 @@ def _from_timestamp(value: float) -> Optional[datetime]:
     return datetime.fromtimestamp(value)
 
 
-def is_within_days(date_value: Optional[datetime], days: int, now: datetime) -> bool:
+def is_within_days(
+    date_value: Optional[datetime], days: int, now: datetime, future_hours: int = 2
+) -> bool:
     if not date_value:
         return False
     if date_value.tzinfo is None and now.tzinfo is not None:
         date_value = date_value.replace(tzinfo=now.tzinfo)
-    return now - timedelta(days=days) <= date_value <= now + timedelta(hours=2)
+    return now - timedelta(days=days) <= date_value <= now + timedelta(hours=future_hours)
 
 
 def hours_ago(date_value: Optional[datetime], now: datetime) -> Optional[float]:

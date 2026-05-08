@@ -17,7 +17,8 @@ def build_report(
     email = config.get("email", {})
     search = config.get("search", {})
 
-    subject = f"{email.get('subject_prefix', 'Daily IT Support Jobs - Ireland')} - {now:%Y-%m-%d}"
+    subject_prefix = email.get("subject_prefix", "").strip()
+    subject = f"{subject_prefix} - {now:%Y-%m-%d}"
     max_per_section = int(search.get("max_jobs_per_section", 10))
 
     top_matches = matches[:max_per_section]

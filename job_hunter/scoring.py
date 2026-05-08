@@ -67,6 +67,6 @@ def should_exclude(job: Job, config: Dict) -> Tuple[bool, str]:
     title_lower = job.title.lower()
     description_lower = (job.description or "").lower()
     for keyword in excluded_keywords:
-        if keyword.lower() in title_lower or keyword.lower() in description_lower:
+        if keyword in title_lower or keyword in description_lower:
             return True, f"Excluded keyword: {keyword}"
     return False, ""
